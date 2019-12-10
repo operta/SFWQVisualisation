@@ -9,6 +9,8 @@ DATABASE = 'pythonsqlite.db'
 app = Flask(__name__)
 CORS(app)
 
+
+# Method to connect to the database
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -17,11 +19,7 @@ def get_db():
     return db
 
 
-def make_dicts(cursor, row):
-    return dict((cursor.description[idx][0], value)
-                for idx, value in enumerate(row))
-
-
+# Method to query the database
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
@@ -29,6 +27,7 @@ def query_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
+# Method to close the connection to database
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
@@ -36,11 +35,7 @@ def close_connection(exception):
         db.close()
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
+# GET ENDPOINT to return data based on date from, date to and parameter name
 @app.route('/data/date-from/<dateFrom>/date-to/<dateTo>/param/<param>')
 def data(param=None, dateFrom=None, dateTo=None):
     data = []
@@ -48,6 +43,8 @@ def data(param=None, dateFrom=None, dateTo=None):
         data.append({"date": i['Datum'], "param": i[param], "stationNumber": i['StationNumber']})
     return jsonify(data)\
 
+
+# GET ENDPOINT to return data based on date from, date to, parameter name and station number
 @app.route('/data/date-from/<dateFrom>/date-to/<dateTo>/param/<param>/sn/<sn>')
 def dataWithSn(sn=None, param=None, dateFrom=None, dateTo=None):
     data = []
@@ -56,6 +53,7 @@ def dataWithSn(sn=None, param=None, dateFrom=None, dateTo=None):
     return jsonify(data)
 
 
+# GET ENDPOINT to return data about stations
 @app.route('/geodata')
 def geodata():
     data = []
@@ -64,6 +62,6 @@ def geodata():
     return jsonify(data)
 
 
-
 if __name__ == '__main__':
+    # run application
     app.run(host='0.0.0.0', debug=True)
