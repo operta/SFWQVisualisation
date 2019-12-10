@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="dataSourceStorageLocal">
-    <data-source name="pythonsqlite" uuid="8e7b10e6-0868-482c-8f03-8c138d6ed649">
-      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" family="SQLITE" exact-version="0.0" />
-      <auth-required>false</auth-required>
-    </data-source>
-  </component>
-</project>

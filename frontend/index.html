@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
 		  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
+	<!--Vega scripts-->
 	<script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0"></script>
 	<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.0"></script>
@@ -172,13 +173,41 @@
 
 
 <script type="text/javascript">
-
+	//Set initial date values
 	setCurrentDate();
 
+	//Fetch stations
 	fetchStations();
 
+	//Fetch data
 	fetchData();
 
+	// Function to return selected parameter
+	function getChosenParameter() {
+		let radios = document.getElementsByName('radioParam');
+		for (let i = 0, length = radios.length; i < length; i++) {
+			if (radios[i].checked) {
+				return radios[i].id;
+			}
+		}
+	}
+
+	// Function to return selected date dimension
+	function getDateDimension() {
+		const a = document.getElementById("dateDimensionSelect");
+		return a.options[a.selectedIndex].value;
+	}
+
+	// Function to return selected station
+	function getStationSelect() {
+		const a = document.getElementById("stationSelect");
+		if (a.options) {
+			return a.options[a.selectedIndex].value;
+		}
+		return null;
+	}
+
+	// Function to fetch all stations and populate station select with their values
 	function fetchStations() {
 		fetch(`http://192.243.103.230:5000/geodata`)
 			.then(res => res.json())
@@ -193,6 +222,7 @@
 			})
 	}
 
+	// Function to set initial date inputs
 	function setCurrentDate() {
 		let today = new Date();
 		let dd = String(today.getDate()).padStart(2, '0');
@@ -206,16 +236,23 @@
 		field.value = today;
 	}
 
+
+	// Function to render the vega visualization with the provided specification.json
 	function render(spec) {
 		vegaEmbed('#vis', spec);
 	}
 
+	// Function to fetch data from server
 	function fetchData() {
+	    // Get values of parameters
 		const dateFrom = document.getElementById('dateFrom').value;
 		const dateTo = document.getElementById('dateTo').value;
-		const param = getChoosenParameter();
+		const param = getChosenParameter();
 		const selectedStation = getStationSelect();
 
+
+		// if station is selected fetch data for station, otherwise fetch all data.
+		// When data is fetched update Vega specification
 		if (selectedStation != 'null') {
 			fetch(`http://192.243.103.230:5000/data/date-from/${dateFrom}/date-to/${dateTo}/param/${param}/sn/${selectedStation}`)
 				.then(res => res.json())
@@ -231,7 +268,7 @@
 
 	}
 
-
+	// Function that fetches vega specification and updates it with data from server
 	function updateVegaSpec(data) {
 		fetch('spec.json')
 			.then(res => res.json())
@@ -239,8 +276,12 @@
 				if (!data) {
 					data = []
 				}
+				//set date dimension used
 				spec.encoding.y.timeUnit = getDateDimension();
+
+				//set the data
 				spec.data.values = data;
+				// render the vega visualization
 				render(spec);
 			})
 			.catch(err => console.error(err));
@@ -248,33 +289,9 @@
 	}
 
 
-	function getChoosenParameter() {
-		var radios = document.getElementsByName('radioParam');
-
-		for (var i = 0, length = radios.length; i < length; i++) {
-			if (radios[i].checked) {
-				return radios[i].id;
-
-			}
-		}
-	}
-
-	function getDateDimension() {
-		const a = document.getElementById("dateDimensionSelect");
-		return a.options[a.selectedIndex].value;
-	}
-
-	function getStationSelect() {
-		const a = document.getElementById("stationSelect");
-		if (a.options) {
-			return a.options[a.selectedIndex].value;
-		}
-		return null;
-
-	}
-
-
 </script>
+
+<!--Bootstrap scripts-->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
 		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
 		crossorigin="anonymous"></script>
