@@ -1,0 +1,289 @@
+<!doctype html>
+
+<html>
+<head>
+	<title>San Franciso Bay Water Quality</title>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		  integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<script src="https://cdn.jsdelivr.net/npm/vega@5.9.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-lite@4.0.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/vega-embed@6.2.0"></script>
+</head>
+<body>
+<header>
+	<div class="collapse bg-dark" id="navbarHeader">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-4 py-4">
+					<h4 class="text-white">About</h4>
+				</div>
+				<div class="col-sm-4 py-4">
+					<p class="text-muted">Author: Džan Operta</p>
+				</div>
+				<div class="col-sm-4 py-4">
+					<p class="text-muted">Course: 188.308 Informationsvisualisation</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="navbar navbar-dark bg-dark shadow-sm">
+		<div class="container">
+			<a class="navbar-brand d-flex align-items-center text-white">
+				<strong>San Franciso Bay Water Quality Information Visualization</strong>
+			</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader"
+					aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+		</div>
+	</div>
+</header>
+
+<main role="main">
+
+	<section class="jumbotron text-center">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<div id="vis"></div>
+				</div>
+				<div class="col-md-3 text-left">
+					<div class="row">
+						<div class="col-md-12">
+							<label for="dateFrom"><b>From Date:</b></label>
+							<div class="form-group">
+								<div class='input-group date'>
+									<input type='date' class="form-control" id='dateFrom' onchange="fetchData()"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<label for="dateTo"><b>To Date:</b></label>
+							<div class="form-group">
+								<div class='input-group date'>
+									<input type='date' class="form-control" id='dateTo' onchange="fetchData()"/>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<label for="dateDimensionSelect"><b>Select Date Dimension:</b></label>
+							<div class="form-group">
+								<select class="form-control" id="dateDimensionSelect" onchange="fetchData()">
+									<option value="yearmonthdate">Day</option>
+									<option value="yearmonth">Month</option>
+									<option value="year">Year</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="col-md-12">
+							<label for="stationSelect"><b>Select station:</b></label>
+							<div class="form-group">
+								<select class="form-control" id="stationSelect" onchange="fetchData()">
+									<option value="null">None</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-md-12">
+							<label><b>Select parameter</b></label>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="Fluorescence" name="radioParam"
+									   onchange="fetchData()"
+									   checked>
+								<label class="custom-control-label" for="Fluorescence">Fluorescence</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="CalculatedChlorophyll"
+									   onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label" for="CalculatedChlorophyll">Calculated
+									Chlorophyll</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="OxygenElectrodeOutput"
+									   onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="OxygenElectrodeOutput">Oxygen Electrode Output</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="OxygenSaturation"
+									   onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="OxygenSaturation">Oxygen Saturation</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="CalculatedOxygen"
+									   onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="CalculatedOxygen">Calculated Oxygen</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="OpticalBackscatter"
+									   onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="OpticalBackscatter">Optical Backscatter</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="SigmaT" onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="SigmaT">Sigma-t</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="CalculatedSPM"
+									   onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="CalculatedSPM">Calculated SPM</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="Temperature" onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="Temperature">Temperature</label>
+							</div>
+							<div class="custom-control custom-radio">
+								<input type="radio" class="custom-control-input" id="Salinity" onchange="fetchData()"
+									   name="radioParam">
+								<label class="custom-control-label"
+									   for="Salinity">Salinity</label>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+</main>
+
+
+<script type="text/javascript">
+
+	setCurrentDate();
+
+	fetchStations();
+
+	fetchData();
+
+	function fetchStations() {
+		fetch(`http://localhost:5000/geodata`)
+			.then(res => res.json())
+			.then(data => {
+				const stationsSelect = document.getElementById('stationSelect');
+				data.forEach(i => {
+					let option = document.createElement("option");
+					option.value = i.stationNumber;
+					option.innerHTML = i.stationNumber;
+					stationsSelect.append(option)
+				})
+			})
+	}
+
+	function setCurrentDate() {
+		let today = new Date();
+		let dd = String(today.getDate()).padStart(2, '0');
+		let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		let yyyy = today.getFullYear();
+		let firstDay = (yyyy - 2) + '-01-01';
+		today = yyyy + '-' + mm + '-' + dd;
+		let field = document.getElementById('dateFrom');
+		field.value = firstDay;
+		field = document.getElementById('dateTo');
+		field.value = today;
+	}
+
+	function render(spec) {
+		vegaEmbed('#vis', spec);
+	}
+
+	function fetchData() {
+		const dateFrom = document.getElementById('dateFrom').value;
+		const dateTo = document.getElementById('dateTo').value;
+		const param = getChoosenParameter();
+		const selectedStation = getStationSelect();
+
+		if (selectedStation != 'null') {
+			fetch(`http://localhost:5000/data/date-from/${dateFrom}/date-to/${dateTo}/param/${param}/sn/${selectedStation}`)
+				.then(res => res.json())
+				.then(data => updateVegaSpec(data))
+				.catch(err => console.error(err));
+
+		} else {
+			fetch(`http://localhost:5000/data/date-from/${dateFrom}/date-to/${dateTo}/param/${param}`)
+				.then(res => res.json())
+				.then(data => updateVegaSpec(data))
+				.catch(err => console.error(err));
+		}
+
+	}
+
+
+	function updateVegaSpec(data) {
+		fetch('spec.json')
+			.then(res => res.json())
+			.then(spec => {
+				if (!data) {
+					data = []
+				}
+				spec.encoding.y.timeUnit = getDateDimension();
+				spec.data.values = data;
+				render(spec);
+			})
+			.catch(err => console.error(err));
+
+	}
+
+
+	function getChoosenParameter() {
+		var radios = document.getElementsByName('radioParam');
+
+		for (var i = 0, length = radios.length; i < length; i++) {
+			if (radios[i].checked) {
+				return radios[i].id;
+
+			}
+		}
+	}
+
+	function getDateDimension() {
+		const a = document.getElementById("dateDimensionSelect");
+		return a.options[a.selectedIndex].value;
+	}
+
+	function getStationSelect() {
+		const a = document.getElementById("stationSelect");
+		if (a.options) {
+			return a.options[a.selectedIndex].value;
+		}
+		return null;
+
+	}
+
+
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
+
+</body>
+</html>

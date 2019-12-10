@@ -1,0 +1,54 @@
+{
+	"$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+	"description": "A simple bar chart with embedded data.",
+	"config": {
+		"style": {
+			"cell": {
+				"stroke": "transparent"
+			}
+		}
+	},
+	"data": {
+		"values": []
+	},
+	"selection": {
+		"highlight": {
+			"type": "single",
+			"empty": "none",
+			"on": "mouseover"
+		},
+		"select": {
+			"type": "single"
+		}
+	},
+	"width": 500,
+	"mark": {
+		"type": "line",
+		"size": 6,
+		"cursor": "pointer",
+		"tooltip": true
+	},
+	"encoding": {
+		"opacity":  {
+			"condition": {
+				"selection": "select",
+				"value": 1
+			},
+			"value": 0.1
+		},
+		"y": {
+			"timeUnit": "yearmonth",
+			"field": "date",
+			"type": "ordinal"
+		},
+		"x": {
+			"field": "param",
+			"aggregate": "average",
+			"type": "quantitative"
+		},
+		"color": {
+			"field": "stationNumber",
+			"type": "nominal"
+		}
+	}
+}
