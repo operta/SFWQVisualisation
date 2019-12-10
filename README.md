@@ -6,7 +6,7 @@ Libraries used: Vega@5.9.0, Vega-lite@4.0.0, Vega-embed@6.2.0, Bootstrap@4.3.1, 
 IDE: Jetbrains WebStorm, Jetbrains PyCharm
 
 
-# Backend -> running flask app 
+# Backend
 
 use python 3+
 
