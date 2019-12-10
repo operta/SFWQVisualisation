@@ -217,13 +217,13 @@
 		const selectedStation = getStationSelect();
 
 		if (selectedStation != 'null') {
-			fetch(`http://localhost:5000/data/date-from/${dateFrom}/date-to/${dateTo}/param/${param}/sn/${selectedStation}`)
+			fetch(`http://192.243.103.230:5000/data/date-from/${dateFrom}/date-to/${dateTo}/param/${param}/sn/${selectedStation}`)
 				.then(res => res.json())
 				.then(data => updateVegaSpec(data))
 				.catch(err => console.error(err));
 
 		} else {
-			fetch(`http://localhost:5000/data/date-from/${dateFrom}/date-to/${dateTo}/param/${param}`)
+			fetch(`http://192.243.103.230:5000/data/date-from/${dateFrom}/date-to/${dateTo}/param/${param}`)
 				.then(res => res.json())
 				.then(data => updateVegaSpec(data))
 				.catch(err => console.error(err));
